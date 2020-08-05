@@ -28,6 +28,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
@@ -595,6 +596,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             this.context = context;
         }
 
+        @SuppressLint("NewApi")
         public SimpleTooltip build() throws IllegalArgumentException {
             validateArguments();
             if (backgroundColor == 0) {
@@ -642,9 +644,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 if (arrowDirection == ArrowDrawable.AUTO)
                     arrowDirection = SimpleTooltipUtils.tooltipGravityToArrowDirection(gravity);
                 if (arrowDrawable == null)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        arrowDrawable = new ArrowDrawable(arrowColor, context.getColor(R.color.border), arrowDirection);
-                    }
+                    arrowDrawable = new ArrowDrawable(arrowColor, context.getResources().getColor(R.color.border), arrowDirection);
                 if (arrowWidth == 0)
                     arrowWidth = context.getResources().getDimension(mDefaultArrowWidthRes);
                 if (arrowHeight == 0)

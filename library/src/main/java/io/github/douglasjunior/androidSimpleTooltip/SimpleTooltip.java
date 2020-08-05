@@ -72,9 +72,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     // Default Resources
     private static final int mDefaultPopupWindowStyleRes = android.R.attr.popupWindowStyle;
     private static final int mDefaultTextAppearanceRes = R.style.simpletooltip_default;
-    private static final int mDefaultBackgroundColorRes = R.color.simpletooltip_background;
+    private static final int mDefaultBackgroundColorRes = R.color.background;
     private static final int mDefaultTextColorRes = R.color.simpletooltip_text;
-    private static final int mDefaultArrowColorRes = R.color.simpletooltip_arrow;
+    private static final int mDefaultArrowColorRes = R.color.background;
     private static final int mDefaultMarginRes = R.dimen.simpletooltip_margin;
     private static final int mDefaultPaddingRes = R.dimen.simpletooltip_padding;
     private static final int mDefaultAnimationPaddingRes = R.dimen.simpletooltip_animation_padding;
@@ -278,8 +278,13 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         mContentView.setPadding((int) mPadding, (int) mPadding, (int) mPadding, (int) mPadding);
 
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            mContentView.setBackground(mContext.getResources().getDrawable(R.drawable.bg_tooltip));
+//        }
+
         LinearLayout linearLayout = new LinearLayout(mContext);
-        linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        linearLayout.setLayoutParams(params);
         linearLayout.setOrientation(mArrowDirection == ArrowDrawable.LEFT || mArrowDirection == ArrowDrawable.RIGHT ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
         int layoutPadding = (int) (mAnimated ? mAnimationPadding : 0);
         linearLayout.setPadding(layoutPadding, layoutPadding, layoutPadding, layoutPadding);
@@ -311,7 +316,17 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         LinearLayout.LayoutParams contentViewParams = new LinearLayout.LayoutParams(width, height, 0);
         contentViewParams.gravity = Gravity.CENTER;
+
+        if (mArrowDirection == ArrowDrawable.LEFT || mArrowDirection == ArrowDrawable.RIGHT) {
+            contentViewParams.setMargins(0,16,0,16);
+        } else {
+            contentViewParams.setMargins(16,0,16,0);
+        }
+
         mContentView.setLayoutParams(contentViewParams);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            linearLayout.setElevation(8f);
+        }
 
         mContentLayout = linearLayout;
         mContentLayout.setVisibility(View.INVISIBLE);
@@ -595,9 +610,14 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             }
             if (contentView == null) {
                 TextView tv = new TextView(context);
+                tv.setId(textViewId);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                }
                 SimpleTooltipUtils.setTextAppearance(tv, mDefaultTextAppearanceRes);
-                tv.setBackgroundColor(backgroundColor);
                 tv.setTextColor(textColor);
+                tv.setTextSize(12f);
+                tv.setBackgroundResource(R.drawable.bg_tooltip_new);
                 contentView = tv;
             }
             if (arrowColor == 0) {
@@ -622,7 +642,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 if (arrowDirection == ArrowDrawable.AUTO)
                     arrowDirection = SimpleTooltipUtils.tooltipGravityToArrowDirection(gravity);
                 if (arrowDrawable == null)
-                    arrowDrawable = new ArrowDrawable(arrowColor, arrowDirection);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        arrowDrawable = new ArrowDrawable(arrowColor, context.getColor(R.color.border), arrowDirection);
+                    }
                 if (arrowWidth == 0)
                     arrowWidth = context.getResources().getDimension(mDefaultArrowWidthRes);
                 if (arrowHeight == 0)

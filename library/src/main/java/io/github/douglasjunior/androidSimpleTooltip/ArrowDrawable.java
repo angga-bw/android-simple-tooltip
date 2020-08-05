@@ -33,6 +33,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.ColorInt;
+import android.util.Log;
 
 /**
  * ArrowDrawable
@@ -43,14 +44,40 @@ public class ArrowDrawable extends ColorDrawable {
     public static final int LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3, AUTO = 4;
 
     private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mPaintBorder = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final int mBackgroundColor;
+    private final int mBorderColor;
     private Path mPath;
+    private Path mPathBorder;
     private final int mDirection;
+
+    private int borderSize = 4;
 
     ArrowDrawable(@ColorInt int foregroundColor, int direction) {
         this.mBackgroundColor = Color.TRANSPARENT;
+        this.mBorderColor = Color.TRANSPARENT;
         this.mPaint.setColor(foregroundColor);
+        this.mPaintBorder.setColor(mBorderColor);
         this.mDirection = direction;
+        this.borderSize = 4;
+    }
+
+    ArrowDrawable(@ColorInt int foregroundColor, @ColorInt int borderColor, int direction) {
+        this.mBackgroundColor = Color.TRANSPARENT;
+        this.mBorderColor = borderColor;
+        this.mPaint.setColor(foregroundColor);
+        this.mPaintBorder.setColor(borderColor);
+        this.mDirection = direction;
+        this.borderSize = 4;
+    }
+
+    ArrowDrawable(@ColorInt int foregroundColor, @ColorInt int borderColor, int borderSize, int direction) {
+        this.mBackgroundColor = Color.TRANSPARENT;
+        this.mBorderColor = borderColor;
+        this.mPaint.setColor(foregroundColor);
+        this.mPaintBorder.setColor(borderColor);
+        this.mDirection = direction;
+        this.borderSize = borderSize;
     }
 
     @Override
@@ -61,31 +88,48 @@ public class ArrowDrawable extends ColorDrawable {
 
     private synchronized void updatePath(Rect bounds) {
         mPath = new Path();
+        mPathBorder = new Path();
 
         switch (mDirection) {
             case LEFT:
-                mPath.moveTo(bounds.width(), bounds.height());
-                mPath.lineTo(0, bounds.height() / 2);
-                mPath.lineTo(bounds.width(), 0);
+                mPath.moveTo(bounds.width()+borderSize, bounds.height());
+                mPath.lineTo(borderSize, ((bounds.height()) / 2));
+                mPath.lineTo(bounds.width(), borderSize);
                 mPath.lineTo(bounds.width(), bounds.height());
+                mPathBorder.moveTo(bounds.width(), bounds.height());
+                mPathBorder.lineTo(0, bounds.height() / 2);
+                mPathBorder.lineTo(bounds.width(), 0);
+                mPathBorder.lineTo(bounds.width(), bounds.height());
                 break;
             case TOP:
-                mPath.moveTo(0, bounds.height());
-                mPath.lineTo(bounds.width() / 2, 0);
-                mPath.lineTo(bounds.width(), bounds.height());
-                mPath.lineTo(0, bounds.height());
+                mPath.moveTo(borderSize, bounds.height());
+                mPath.lineTo((bounds.width() / 2), borderSize);
+                mPath.lineTo(bounds.width()-borderSize, bounds.height());
+                mPath.lineTo(borderSize, bounds.height());
+                mPathBorder.moveTo(0, bounds.height());
+                mPathBorder.lineTo((bounds.width()) / 2, 0);
+                mPathBorder.lineTo(bounds.width(), bounds.height());
+                mPathBorder.lineTo(0, bounds.height());
                 break;
             case RIGHT:
-                mPath.moveTo(0, 0);
-                mPath.lineTo(bounds.width(), bounds.height() / 2);
-                mPath.lineTo(0, bounds.height());
-                mPath.lineTo(0, 0);
+                mPath.moveTo(-borderSize, 0);
+                mPath.lineTo(bounds.width()-borderSize, (bounds.height()) / 2);
+                mPath.lineTo(-borderSize, bounds.height());
+                mPath.lineTo(-borderSize, 0);
+                mPathBorder.moveTo(0, 0);
+                mPathBorder.lineTo(bounds.width(), (bounds.height()) / 2);
+                mPathBorder.lineTo(0, bounds.height());
+                mPathBorder.lineTo(0, 0);
                 break;
             case BOTTOM:
-                mPath.moveTo(0, 0);
-                mPath.lineTo(bounds.width() / 2, bounds.height());
-                mPath.lineTo(bounds.width(), 0);
-                mPath.lineTo(0, 0);
+                mPath.moveTo(0, -borderSize);
+                mPath.lineTo((bounds.width()) / 2, bounds.height()-borderSize);
+                mPath.lineTo(bounds.width(), -borderSize);
+                mPath.lineTo(0, -borderSize);
+                mPathBorder.moveTo(0, 0);
+                mPathBorder.lineTo((bounds.width()) / 2, bounds.height());
+                mPathBorder.lineTo(bounds.width(), 0);
+                mPathBorder.lineTo(0, 0);
                 break;
         }
 
@@ -97,6 +141,7 @@ public class ArrowDrawable extends ColorDrawable {
         canvas.drawColor(mBackgroundColor);
         if (mPath == null)
             updatePath(getBounds());
+        canvas.drawPath(mPathBorder, mPaintBorder);
         canvas.drawPath(mPath, mPaint);
     }
 

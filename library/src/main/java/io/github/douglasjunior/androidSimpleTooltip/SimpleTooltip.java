@@ -321,13 +321,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         if (mArrowDirection == ArrowDrawable.LEFT || mArrowDirection == ArrowDrawable.RIGHT) {
             contentViewParams.setMargins(0,16,0,16);
         } else {
-            contentViewParams.setMargins(16,0,16,0);
+            contentViewParams.setMargins(16,0,16,96);
         }
 
         mContentView.setLayoutParams(contentViewParams);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            linearLayout.setElevation(8f);
-        }
 
         mContentLayout = linearLayout;
         mContentLayout.setVisibility(View.INVISIBLE);
@@ -650,17 +647,19 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 if (arrowHeight == 0)
                     arrowHeight = context.getResources().getDimension(mDefaultArrowHeightRes);
 
-                TextView tv = ((TextView)contentView);
-                if (arrowDirection == ArrowDrawable.AUTO) {
-                    tv.setBackgroundResource(R.drawable.bg_tooltip_new_basic);
-                } else if (arrowDirection == ArrowDrawable.TOP) {
-                    tv.setBackgroundResource(R.drawable.bg_tooltip_new_top);
-                } else if (arrowDirection == ArrowDrawable.BOTTOM) {
-                    tv.setBackgroundResource(R.drawable.bg_tooltip_new_bottom);
-                } else if (arrowDirection == ArrowDrawable.LEFT) {
-                    tv.setBackgroundResource(R.drawable.bg_tooltip_new_left);
-                } else if (arrowDirection == ArrowDrawable.RIGHT) {
-                    tv.setBackgroundResource(R.drawable.bg_tooltip_new_right);
+                if (contentView instanceof TextView) {
+                    TextView tv = ((TextView) contentView);
+                    if (arrowDirection == ArrowDrawable.AUTO) {
+                        tv.setBackgroundResource(R.drawable.bg_tooltip_new_basic);
+                    } else if (arrowDirection == ArrowDrawable.TOP) {
+                        tv.setBackgroundResource(R.drawable.bg_tooltip_new_top);
+                    } else if (arrowDirection == ArrowDrawable.BOTTOM) {
+                        tv.setBackgroundResource(R.drawable.bg_tooltip_new_bottom);
+                    } else if (arrowDirection == ArrowDrawable.LEFT) {
+                        tv.setBackgroundResource(R.drawable.bg_tooltip_new_left);
+                    } else if (arrowDirection == ArrowDrawable.RIGHT) {
+                        tv.setBackgroundResource(R.drawable.bg_tooltip_new_right);
+                    }
                 }
             }
             if (highlightShape < 0 || highlightShape > OverlayView.HIGHLIGHT_SHAPE_RECTANGULAR) {

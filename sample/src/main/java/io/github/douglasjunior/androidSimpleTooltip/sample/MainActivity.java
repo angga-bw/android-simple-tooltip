@@ -133,12 +133,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.btn_outside) {
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
-                    .text(R.string.btn_outside)
+                    .text("Beri utang piutang kepada pelanggan")
                     .backgroundColor(getResources().getColor(R.color.background_tooltip))
                     .arrowColor(getResources().getColor(R.color.background_tooltip))
                     .gravity(Gravity.BOTTOM)
                     .dismissOnOutsideTouch(true)
                     .dismissOnInsideTouch(false)
+                    .margin(0f)
+                    .maxWidth(500f)
                     .build()
                     .show();
 

@@ -73,9 +73,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     // Default Resources
     private static final int mDefaultPopupWindowStyleRes = android.R.attr.popupWindowStyle;
     private static final int mDefaultTextAppearanceRes = R.style.simpletooltip_default;
-    private static final int mDefaultBackgroundColorRes = R.color.background;
+    private static final int mDefaultBackgroundColorRes = R.color.background_tooltip;
     private static final int mDefaultTextColorRes = R.color.simpletooltip_text;
-    private static final int mDefaultArrowColorRes = R.color.background;
+    private static final int mDefaultArrowColorRes = R.color.background_tooltip;
     private static final int mDefaultMarginRes = R.dimen.simpletooltip_margin;
     private static final int mDefaultPaddingRes = R.dimen.simpletooltip_padding;
     private static final int mDefaultAnimationPaddingRes = R.dimen.simpletooltip_animation_padding;
@@ -614,12 +614,12 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 TextView tv = new TextView(context);
                 tv.setId(textViewId);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    tv.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                 }
                 SimpleTooltipUtils.setTextAppearance(tv, mDefaultTextAppearanceRes);
                 tv.setTextColor(textColor);
                 tv.setTextSize(12f);
-                tv.setBackgroundResource(R.drawable.bg_tooltip_new);
+                tv.setLineHeight(48);
                 contentView = tv;
             }
             if (arrowColor == 0) {
@@ -644,11 +644,24 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 if (arrowDirection == ArrowDrawable.AUTO)
                     arrowDirection = SimpleTooltipUtils.tooltipGravityToArrowDirection(gravity);
                 if (arrowDrawable == null)
-                    arrowDrawable = new ArrowDrawable(arrowColor, context.getResources().getColor(R.color.border), arrowDirection);
+                    arrowDrawable = new ArrowDrawable(arrowColor, context.getResources().getColor(R.color.border_tooltip), arrowDirection);
                 if (arrowWidth == 0)
                     arrowWidth = context.getResources().getDimension(mDefaultArrowWidthRes);
                 if (arrowHeight == 0)
                     arrowHeight = context.getResources().getDimension(mDefaultArrowHeightRes);
+
+                TextView tv = ((TextView)contentView);
+                if (arrowDirection == ArrowDrawable.AUTO) {
+                    tv.setBackgroundResource(R.drawable.bg_tooltip_new_basic);
+                } else if (arrowDirection == ArrowDrawable.TOP) {
+                    tv.setBackgroundResource(R.drawable.bg_tooltip_new_top);
+                } else if (arrowDirection == ArrowDrawable.BOTTOM) {
+                    tv.setBackgroundResource(R.drawable.bg_tooltip_new_bottom);
+                } else if (arrowDirection == ArrowDrawable.LEFT) {
+                    tv.setBackgroundResource(R.drawable.bg_tooltip_new_left);
+                } else if (arrowDirection == ArrowDrawable.RIGHT) {
+                    tv.setBackgroundResource(R.drawable.bg_tooltip_new_right);
+                }
             }
             if (highlightShape < 0 || highlightShape > OverlayView.HIGHLIGHT_SHAPE_RECTANGULAR) {
                 highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;

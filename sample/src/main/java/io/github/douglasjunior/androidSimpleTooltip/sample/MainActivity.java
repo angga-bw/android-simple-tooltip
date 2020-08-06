@@ -32,7 +32,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -135,8 +134,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
                     .text(R.string.btn_outside)
-                    .backgroundColor(getResources().getColor(R.color.background))
-                    .arrowColor(getResources().getColor(R.color.background))
+                    .backgroundColor(getResources().getColor(R.color.background_tooltip))
+                    .arrowColor(getResources().getColor(R.color.background_tooltip))
                     .gravity(Gravity.BOTTOM)
                     .dismissOnOutsideTouch(true)
                     .dismissOnInsideTouch(false)

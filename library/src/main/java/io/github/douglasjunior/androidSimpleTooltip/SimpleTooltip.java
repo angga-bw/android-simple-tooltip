@@ -56,6 +56,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import java.lang.Exception
 
 
 /**
@@ -616,7 +617,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 SimpleTooltipUtils.setTextAppearance(tv, mDefaultTextAppearanceRes);
                 tv.setTextColor(textColor);
                 tv.setTextSize(12f);
-                tv.setLineHeight(48);
+                try{
+                    tv.setLineHeight(48);
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
                 contentView = tv;
             }
             if (arrowColor == 0) {
